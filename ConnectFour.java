@@ -170,7 +170,8 @@ public class ConnectFour {
 					&& (chip.contains(currentChip + 3) && rowCheck(currentChip + 3, row))) { // -
 					return true;
 			}
-			if (chip.contains(currentChip + 7) && chip.contains(currentChip + 14) && chip.contains(currentChip + 21)) { // |
+			if (chip.contains(currentChip + 7) && chip.contains(currentChip + 14) 
+					&& chip.contains(currentChip + 21)) { // |
 					return true;
 			}
 			if ((chip.contains(currentChip + 8) && rowCheck(currentChip + 8,row+1))
@@ -217,17 +218,23 @@ public class ConnectFour {
 			int row = (currentChip - currentChip % 7) / 7;
 			if( (chipHolder.contains(currentChip+1) && rowCheck(currentChip+1,row)) // -
 					&& (chipHolder.contains(currentChip+2) && rowCheck(currentChip+2,row))
-					&& (boundsCheck(currentChip+3) && rowCheck(stackedRow(currentChip+3),row) && ((JLabel) panel.getComponent(currentChip+3)).getIcon().equals(empty))  ){
+					&& (boundsCheck(currentChip+3) 
+					&& rowCheck(stackedRow(currentChip+3),row) 
+					&& ((JLabel) panel.getComponent(currentChip+3)).getIcon().equals(empty))  ){
 						return currentChip+3;
 			}
 			if( (chipHolder.contains(currentChip+2) && rowCheck(currentChip+2,row)) // -
 					&& (chipHolder.contains(currentChip+3) && rowCheck(currentChip+3,row))
-					&& (boundsCheck(currentChip+1) && rowCheck(stackedRow(currentChip+1),row) && ((JLabel) panel.getComponent(currentChip+1)).getIcon().equals(empty))  ){
+					&& (boundsCheck(currentChip+1) 
+					&& rowCheck(stackedRow(currentChip+1),row) 
+					&& ((JLabel) panel.getComponent(currentChip+1)).getIcon().equals(empty))  ){
 						return currentChip+1;
 			}
 			if( (chipHolder.contains(currentChip+1) && rowCheck(currentChip+1,row)) // -
 					 && (chipHolder.contains(currentChip+3) && rowCheck(currentChip+3,row))
-					 && (boundsCheck(currentChip+2) && rowCheck(stackedRow(currentChip+2),row) && ((JLabel) panel.getComponent(currentChip+2)).getIcon().equals(empty))  ){
+					 && (boundsCheck(currentChip+2) 
+					 && rowCheck(stackedRow(currentChip+2),row) 
+					 && ((JLabel) panel.getComponent(currentChip+2)).getIcon().equals(empty))  ){
 						return currentChip+2;
 			}
 			if( (chipHolder.contains(currentChip-1) && rowCheck(currentChip-1,row)) // -
@@ -243,32 +250,44 @@ public class ConnectFour {
 			}
 			if( (chipHolder.contains(currentChip-6) && rowCheck(currentChip-6,row-1)) // /
 					&& (chipHolder.contains(currentChip-12) && rowCheck(currentChip-12,row-2))
-					&& (boundsCheck(currentChip-18) && rowCheck(stackedRow(currentChip-18),row-3) && ((JLabel) panel.getComponent(currentChip-18)).getIcon().equals(empty)) ){
+					&& (boundsCheck(currentChip-18) 
+					&& rowCheck(stackedRow(currentChip-18),row-3) 
+					&& ((JLabel) panel.getComponent(currentChip-18)).getIcon().equals(empty)) ){
 						return currentChip-18;
 			}
 			if( (chipHolder.contains(currentChip-18) && rowCheck(currentChip-18,row-3)) // /
 					&& (chipHolder.contains(currentChip-12) && rowCheck(currentChip-12,row-2))
-					&& (boundsCheck(currentChip-6) && rowCheck(stackedRow(currentChip-6),row-1) && ((JLabel) panel.getComponent(currentChip-6)).getIcon().equals(empty)) ){
+					&& (boundsCheck(currentChip-6) 
+					&& rowCheck(stackedRow(currentChip-6),row-1) 
+					&& ((JLabel) panel.getComponent(currentChip-6)).getIcon().equals(empty)) ){
 						return currentChip-6;
 			}
 			if( (chipHolder.contains(currentChip-6) && rowCheck(currentChip-6,row-1)) // /
 					&& (chipHolder.contains(currentChip-18) && rowCheck(currentChip-18,row-3))
-					&& (boundsCheck(currentChip-12) && rowCheck(stackedRow(currentChip-12),row-2) && ((JLabel) panel.getComponent(currentChip-12)).getIcon().equals(empty)) ){
+					&& (boundsCheck(currentChip-12) 
+					&& rowCheck(stackedRow(currentChip-12),row-2) 
+					&& ((JLabel) panel.getComponent(currentChip-12)).getIcon().equals(empty)) ){
 						return currentChip-12;
 			}
 			if( (chipHolder.contains(currentChip-8) && rowCheck(currentChip-8,row-1))// \
 					&& (chipHolder.contains(currentChip-16) && rowCheck(currentChip-16,row-2))
-					&& (boundsCheck(currentChip-24) && rowCheck(stackedRow(currentChip-24),row-3) && ((JLabel) panel.getComponent(currentChip-24)).getIcon().equals(empty)) ){
+					&& (boundsCheck(currentChip-24) 
+					&& rowCheck(stackedRow(currentChip-24),row-3)
+					&& ((JLabel) panel.getComponent(currentChip-24)).getIcon().equals(empty)) ){
 						return currentChip-24;
 			}
 			if( (chipHolder.contains(currentChip-24) && rowCheck(currentChip-24,row-3))// \
 					&& (chipHolder.contains(currentChip-16) && rowCheck(currentChip-16,row-2))
-					&& (boundsCheck(currentChip-8) && rowCheck(stackedRow(currentChip-8),row-1) && ((JLabel) panel.getComponent(currentChip-8)).getIcon().equals(empty)) ){
+					&& (boundsCheck(currentChip-8) 
+					&& rowCheck(stackedRow(currentChip-8),row-1) 
+					&& ((JLabel) panel.getComponent(currentChip-8)).getIcon().equals(empty)) ){
 						return currentChip-8;
 			}
 			if( (chipHolder.contains(currentChip-8) && rowCheck(currentChip-8,row-1))// \
 					&& (chipHolder.contains(currentChip-24) && rowCheck(currentChip-24,row-3))
-					&& (boundsCheck(currentChip-16) && rowCheck(stackedRow(currentChip-16),row-2) && ((JLabel) panel.getComponent(currentChip-16)).getIcon().equals(empty)) ){
+					&& (boundsCheck(currentChip-16) 
+					&& rowCheck(stackedRow(currentChip-16),row-2) 
+					&& ((JLabel) panel.getComponent(currentChip-16)).getIcon().equals(empty)) ){
 						return currentChip-16;
 			}
 		}

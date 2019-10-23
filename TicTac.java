@@ -199,7 +199,8 @@ public class TicTac {
 				return 8;
 			} else if (player.contains(8) && player.contains(4) && (((JButton) ticPanel.getComponent(0)).getIcon()) == null) {
 				return 0;
-			} else if (((player.contains(8) && player.contains(0)) || (player.contains(2) && player.contains(6))) && (((JButton) ticPanel.getComponent(4)).getIcon()) == null) {
+			} else if (((player.contains(8) && player.contains(0)) 
+					|| (player.contains(2) && player.contains(6))) && (((JButton) ticPanel.getComponent(4)).getIcon()) == null) {
 				return 4;
 			} else if (player.contains(2) && player.contains(4) && (((JButton) ticPanel.getComponent(6)).getIcon()) == null) {
 				return 6;
