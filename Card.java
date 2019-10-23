@@ -11,6 +11,7 @@ public class Card{
 	public String suit; // Hearts Diamonds...
 	public JLabel icon;
 	public String color;
+	
 	public static final String[] SYMBOLS = { "Ace", "Two", "Three", "Four", "Five", "Six", 
 			"Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
 	public static final String[] SUITS = { "Spades", "Clover", "Hearts", "Diamond" };

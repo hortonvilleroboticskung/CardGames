@@ -1,6 +1,7 @@
 package Games;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -28,15 +29,17 @@ public class Deck{
 		return shuffle ? shuffleDeck(orderedDeck) : orderedDeck;
 	}
 	
-	public ArrayList<Card> shuffleDeck() {
-		ArrayList<Card> holder = new ArrayList<Card>();
+	public boolean shuffleDeck() {
+		ArrayList<Card> check = new ArrayList<>();
+		check.addAll(contents);
+		ArrayList<Card> holder = new ArrayList<>();
 		while(contents.size() != 0) {
 			int index = new Random().nextInt(contents.size());
 			holder.add(contents.get(index));
 			contents.remove(index);
 		}
 		contents = holder;
-		return holder;
+		return contents!=check;
 	}
 	
 	private ArrayList<Card> shuffleDeck(ArrayList<Card> deck) {
@@ -78,6 +81,21 @@ public class Deck{
 	
 	public int size() {
 		return contents.size();
+	}
+	
+	public void add(Card c) {
+		contents.add(c);
+	}
+	
+	public void add(int index,Card c) {
+		contents.add(index, c);
+	}
+	
+	public boolean addAll(ArrayList<Card> c) {
+		ArrayList<Card> check = new ArrayList<>();
+		check.addAll(contents);
+		contents.addAll(c);
+		return contents!=check;
 	}
 	
 }

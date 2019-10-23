@@ -55,12 +55,8 @@ public class Fish{
 
 	private ArrayList<Card> startHand(int startNum) {
 		ArrayList<Card> hand = new ArrayList<>();
-		for (int ii = 0; ii < startNum; ii++) {
-			hand.add(deck.get(0));
-			deck.remove(0);
-		}
+		hand.addAll(deck.draw(startNum));
 		pairing(hand);
-		System.out.println(hand);
 		return hand;
 	}
 
@@ -100,11 +96,9 @@ public class Fish{
 
 		if ((deck.size() != 0) && !paired) {
 			logPanel.add(new JLabel("No Match, so it drew a card"));
-			com.add(deck.get(0));
-			deck.remove(0);
+			com.add(deck.draw());
+			pairing(com);
 		}
-
-		pairing(com);
 	}
 
 	private void fishyListener(Card c) {
@@ -129,25 +123,20 @@ public class Fish{
 
 				if (!paired) {
 					logPanel.add(new JLabel(("No Match, so you drew a " + deck.get(0))));
-					p1.add(deck.get(0));
-					deck.remove(0);
+					p1.add(deck.draw());
 					pairing(p1);
 				}
 				logPanel.validate();
 				if (p1.size() == 0) {
-					JOptionPane p = new JOptionPane();
 					JOptionPane.showMessageDialog(frame, "You matched all your cards first!", "Congratulations!",
 							JOptionPane.PLAIN_MESSAGE);
-					String[] arr = {"Yes","No"};
-					int choice = JOptionPane.showOptionDialog(frame, "Wanna Play Again?", "Game Finished!", 
-							JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, arr , "No");
-					if(choice == 0) {
-						frame.dispose();
+					if(GUI.playAgain(frame)) {
 						logFrame.dispose();
+						frame.dispose();
 						new GUI();
-					} else if (choice == 1) {
-						frame.dispose();
+					} else {
 						logFrame.dispose();
+						frame.dispose();
 						System.exit(0);
 					}
 				}
@@ -157,19 +146,15 @@ public class Fish{
 				}
 
 				if (com.size() == 0) {
-					JOptionPane p = new JOptionPane();
 					JOptionPane.showMessageDialog(frame, "You lost to a robot loser ", "Beep-Boop",
 							JOptionPane.PLAIN_MESSAGE);
-					String[] arr = {"Yes","No"};
-					int choice = JOptionPane.showOptionDialog(frame, "Wanna Play Again?", "Game Finished!", 
-							JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, arr , "No");
-					if(choice == 0) {
-						frame.dispose();
+					if(GUI.playAgain(frame)) {
 						logFrame.dispose();
+						frame.dispose();
 						new GUI();
-					} else if (choice == 1) {
-						frame.dispose();
+					} else {
 						logFrame.dispose();
+						frame.dispose();
 						System.exit(0);
 					}
 				}
