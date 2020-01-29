@@ -3,33 +3,27 @@ package Games;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import java.beans.PropertyChangeListener;
+import javax.swing.*;
 
 public class GUI {
 
 	private JFrame guiFrame = new JFrame();
-	private JPanel guiPanel = new JPanel(new GridLayout(3, 1));
-	private boolean fourSingle = false;
-	private boolean fourCoolChip = false;
+	private JPanel guiPanel = new JPanel(new GridLayout(4, 1));
+    boolean fourSingle = false;
+    boolean fourCoolChip = false;
 
 	public GUI() {
-		JButton fish = new JButton("Go Fish");
-		fish.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				guiPanel.removeAll();
-				guiFrame.dispose();
-				new Fish();
-
-			}
-
-		});
-
-		JButton tacs = new JButton("Tic-Tac-Toe");
+        JButton fish = new JButton("Go Fish");
+        fish.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guiFrame.dispose();
+                new Fish();
+            }
+        });
+        JButton tacs = new JButton("Tic-Tac-Toe");
 		tacs.addActionListener(new ActionListener() {
 
 			@Override
@@ -64,7 +58,6 @@ public class GUI {
 			}
 
 		});
-
 		JButton fours = new JButton("Connect Four");
 		fours.addActionListener(new ActionListener() {
 
@@ -102,15 +95,21 @@ public class GUI {
 
 		});
 
+		JButton war = new JButton("War");
+        war.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guiFrame.dispose();
+                new War();
+            }
+        });
+
 		guiPanel.add(fish);
 		guiPanel.add(tacs);
 		guiPanel.add(fours);
+		guiPanel.add(war);
 		guiFrame.add(guiPanel);
-		guiFrame.setSize(300, 300);
-		guiFrame.setLocation(800, 200);
-		guiFrame.setVisible(true);
-		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		guiFrame.setResizable(false);
+		defaultFrameWork(guiFrame,300,300);
 	}
 	private void fourChips() {
 
@@ -142,18 +141,38 @@ public class GUI {
 		guiFrame.validate();
 	}
 	
-	public static boolean playAgain(JFrame f) {
+	public static void playAgain(JFrame f) {
 		String[] arr = { "Yes", "No" };
 		int choice = JOptionPane.showOptionDialog(f, "Wanna Play Again?", "Game Finished!",
 				JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, arr, "No");
-
-		return choice == 0;
+		if(choice == 0){
+			f.dispose();
+			new GUI();
+		} else {
+			System.exit(0);
+		}
+	}
+	
+	public static void defaultFrameWork(JFrame f, int x, int y) {
+		f.setVisible(true);
+		f.setLocation(500,200);
+		if(x > 0 && y > 0){
+		    f.setSize(x,y);
+        } else {
+		    f.pack();
+        }
+		f.setResizable(false);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-
-
+    public static void defaultFrameWork(JFrame f) {
+        f.setVisible(true);
+        f.setLocation(500,200);
+        f.pack();
+        f.setResizable(false);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
 	public static void main(String[] args) {
 		new GUI();
 	}
-
 }

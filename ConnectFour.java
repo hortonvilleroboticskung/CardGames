@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,37 +21,36 @@ public class ConnectFour {
 	private JFrame frame = new JFrame();
 	private JPanel panel = new JPanel(new GridLayout(6, 7));
 	private ArrayList<Integer> redChips = new ArrayList<>();
-	private ArrayList<Integer> yellowChips = new ArrayList<>();
-	private int turn = 0;
-	private ImageIcon empty;
-	private ImageIcon red;
-	private ImageIcon yellow;
+	private ArrayList<Integer> yellowChips  = new ArrayList<>();
+	private ImageIcon empty,red,yellow;
+	private String redTurn,yellowTurn;
 	private boolean single;
-	private boolean stop = false;
+	private int turn = 0;
 
 	public ConnectFour(boolean playerCount, boolean chipChoice) {
 		single = playerCount;
 		empty = chipChoice ? new ImageIcon(".\\ConnectFour\\emptyPoke.png") : new ImageIcon(".\\ConnectFour\\emptyTwo.png");
 		red = chipChoice ? new ImageIcon(".\\ConnectFour\\redUltraBall.png") : new ImageIcon(".\\ConnectFour\\redBlueTwo.png");
 		yellow = chipChoice ? new ImageIcon(".\\ConnectFour\\yellowMasterBall.png") : new ImageIcon(".\\ConnectFour\\yellowBlueTwo.png");
-		startGame();
-		
+		redTurn = chipChoice ? "Ultra Ball's Turn" : "Red's Turn";
+		yellowTurn = chipChoice ? "Master Ball's Turn" : "Yellow's Turn";
+		startGame();	
 	}
 
 	private void startGame() {
+		frame.setTitle(redTurn);
 		for (int i = 0; i < 42; i++) {
 			JLabel openChip = new JLabel(empty);
 			openChip.setName(i + "");
-			frame.setTitle("Red's Turn");
 			panel.add(openChip);
 			frame.add(panel);
 			openChip.addMouseListener(new MouseListener() {
 
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					
+					//Gets the first open slot in that column
 					int thisChip = stackedRow(Integer.parseInt(openChip.getName()));
-
+					
 					if (thisChip < 0) {
 						JOptionPane.showMessageDialog(frame, "Chip Stack Overflow Error!", "Stop That",
 								JOptionPane.ERROR_MESSAGE);
@@ -60,11 +60,11 @@ public class ConnectFour {
 						if (turn % 2 == 0) {
 							replace.setIcon(red);
 							redChips.add(thisChip);
-							frame.setTitle("Yellow's Turn");
+							frame.setTitle(yellowTurn);
 						} else {
 							replace.setIcon(yellow);
 							yellowChips.add(thisChip);
-							frame.setTitle("Red's Turn");
+							frame.setTitle(redTurn);
 						}
 						turn++;
 							
@@ -73,34 +73,23 @@ public class ConnectFour {
 							replace = (JLabel) panel.getComponent(thisChip);
 							replace.setIcon(yellow);
 							yellowChips.add(thisChip);
-							frame.setTitle("Red's Turn");
+							frame.setTitle(redTurn);
 							turn++;
 						}
 						
 					}
-
 					if(winCondition(redChips)) {
-						winMessage("Red");
-						stop = true;
-					} else if(!stop && winCondition(yellowChips)) {
-						winMessage("Yellow");
-						stop = true;
-					}
-					
-					if (!stop && turn == 42) {
-						JOptionPane.showMessageDialog(frame, "Didn't know this was possible", "No Winner",
-								JOptionPane.ERROR_MESSAGE);
-						frame.dispose();
+						winMessage(redTurn.split("'")[0]);
+					} else if(winCondition(yellowChips)) {
+						winMessage(yellowTurn.split("'")[0]);
+					} else if (turn == 42) {
+						winMessage("Nobody");
 					}
 				} @Override public void mouseEntered(MouseEvent arg0) {} @Override public void mouseExited(MouseEvent arg0) {} @Override public void mousePressed(MouseEvent arg0) {} @Override public void mouseReleased(MouseEvent arg0) {}
 
 			});
 		}
-		frame.setLocation(700, 200);
-		frame.setSize(710, 640);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
+		GUI.defaultFrameWork(frame);
 	}
 
 	/*
@@ -111,90 +100,15 @@ public class ConnectFour {
 	 * | 28| 29| 30| 31| 32| 33| 34| 
 	 * | 35| 36| 37| 38| 39| 40| 41|
 	 */
-
-	private int stackedRow(int index) {
-		int labelCheck = -1;
-		if (index == -1) return -1;
-		if (index % 7 == 0)
-			labelCheck = 35;
-		if (index % 7 == 1)
-			labelCheck = 36;
-		if (index % 7 == 2)
-			labelCheck = 37;
-		if (index % 7 == 3)
-			labelCheck = 38;
-		if (index % 7 == 4)
-			labelCheck = 39;
-		if (index % 7 == 5)
-			labelCheck = 40;
-		if (index % 7 == 6)
-			labelCheck = 41;
-
-		while (!((JLabel) panel.getComponent(labelCheck)).getIcon().equals(empty)) {
-			labelCheck = labelCheck - 7;
-			if (labelCheck < 0) {
-				return -1;
-			}
-		}
-		return labelCheck;
-	}
-
-	private void winMessage(String color) {
-		JOptionPane.showMessageDialog(frame, color + " has won the game", "Congrats!",
-				JOptionPane.PLAIN_MESSAGE);
-		if(GUI.playAgain(frame)) {
-			frame.dispose();
-			new GUI();
-		} else {
-			frame.dispose();
-			System.exit(0);
-		}
-	}
-	
-	private boolean rowCheck(int currentChip, int row) {
-		return (currentChip - currentChip % 7) / 7 == row;
-	}
-	
-	private boolean boundsCheck(int currentChip) {
-		return currentChip > -1 && currentChip < 42;
-	}
-	
-	private boolean winCondition(ArrayList<Integer> chip) {
-
-		for (int currentChip : chip) {
-
-			int row = (currentChip - currentChip % 7) / 7;
-
-			if ((chip.contains(currentChip + 1) && rowCheck(currentChip + 1, row))
-					&& (chip.contains(currentChip + 2) && rowCheck(currentChip + 2, row))
-					&& (chip.contains(currentChip + 3) && rowCheck(currentChip + 3, row))) { // -
-					return true;
-			}
-			if (chip.contains(currentChip + 7) && chip.contains(currentChip + 14) 
-					&& chip.contains(currentChip + 21)) { // |
-					return true;
-			}
-			if ((chip.contains(currentChip + 8) && rowCheck(currentChip + 8,row+1))
-					&& (chip.contains(currentChip + 16) && rowCheck(currentChip + 16, row+2))
-					&& (chip.contains(currentChip + 24) && rowCheck(currentChip + 24, row+3))) { // \
-					return true;
-			}
-			if ((chip.contains(currentChip + 6) && rowCheck(currentChip + 6, row+1))
-					&& (chip.contains(currentChip + 12) && rowCheck(currentChip + 12, row+2))
-					&& (chip.contains(currentChip + 18) && rowCheck(currentChip + 18, row+3))) { // /
-					return true;
-			}
-		}
-		return false;
-	}
-
 	private int computerChoice() {
+		//Finds the slot that would let computer win
 		int yellowMove = counterPlay(yellowChips);
+		//Finds the slot that would not let you win
 		int redCounter = counterPlay(redChips);
-		//System.out.println("Yellow Move: "+yellowMove+"\nRed Counter:"+redCounter);
+		//Prioritize winning over not losing
 		int choice = yellowMove == -1 ? (redCounter == -1 ? -1 : redCounter) : yellowMove;
-		//System.out.println("Choice: "+choice);
-		if(choice == -1 ) { //Give random moves until red has 2 chips
+		//if cant find a good spot, picks a random one
+		if(choice == -1 ) {
 			if(((JLabel) panel.getComponent(38)).getIcon().equals(empty)) {
 				return 38;
 			} else if(((JLabel) panel.getComponent(36)).getIcon().equals(empty)) {
@@ -202,96 +116,89 @@ public class ConnectFour {
 			} else if(((JLabel) panel.getComponent(40)).getIcon().equals(empty)) {
 				return 40;
 			}
-			int ran = stackedRow(new Random().nextInt(42));
+			int ran = stackedRow((int)(Math.random()*42));
 			while(stackedRow(ran)==-1 || !(((JLabel) panel.getComponent(stackedRow(ran))).getIcon().equals(empty)) ) {
-				ran = stackedRow(new Random().nextInt(42));
+				ran = stackedRow((int)(Math.random()*42));
 			}
-			//System.out.println("Randomized: "+ ran);
 			return ran;
-		} 
-		//System.out.println("Final Decision: "+choice+"\n------------");
+		}
 		return choice;
 	}
 	
 	private int counterPlay(ArrayList<Integer> chipHolder) {
+		int[][] numChecks = {
+				//Chip,Row,Chip,Row,Chip,Row
+				{1,0,2,0,3,0},
+				{2,0,3,0,1,0},
+				{3,0,1,0,2,0},
+				{-1,0,-2,0,-3,0},
+				{-7,-1,-14,-2,-21,-3},
+				{-6,-1,-12,-2,-18,-3},
+				{-18,-3,-12,-2,-6,-1},
+				{-6,-1,-18,-3,-12,-2},
+				{-8,-1,-16,-2,-24,-3},
+				{-24,-3,-16,-2,-8,-1},
+				{-8,-1,-24,-3,-16,-2},
+		};
 		for(int currentChip : chipHolder) {
 			int row = (currentChip - currentChip % 7) / 7;
-			if( (chipHolder.contains(currentChip+1) && rowCheck(currentChip+1,row)) // -
-					&& (chipHolder.contains(currentChip+2) && rowCheck(currentChip+2,row))
-					&& (boundsCheck(currentChip+3) 
-					&& rowCheck(stackedRow(currentChip+3),row) 
-					&& ((JLabel) panel.getComponent(currentChip+3)).getIcon().equals(empty))  ){
-						return currentChip+3;
-			}
-			if( (chipHolder.contains(currentChip+2) && rowCheck(currentChip+2,row)) // -
-					&& (chipHolder.contains(currentChip+3) && rowCheck(currentChip+3,row))
-					&& (boundsCheck(currentChip+1) 
-					&& rowCheck(stackedRow(currentChip+1),row) 
-					&& ((JLabel) panel.getComponent(currentChip+1)).getIcon().equals(empty))  ){
-						return currentChip+1;
-			}
-			if( (chipHolder.contains(currentChip+1) && rowCheck(currentChip+1,row)) // -
-					 && (chipHolder.contains(currentChip+3) && rowCheck(currentChip+3,row))
-					 && (boundsCheck(currentChip+2) 
-					 && rowCheck(stackedRow(currentChip+2),row) 
-					 && ((JLabel) panel.getComponent(currentChip+2)).getIcon().equals(empty))  ){
-						return currentChip+2;
-			}
-			if( (chipHolder.contains(currentChip-1) && rowCheck(currentChip-1,row)) // -
-					&& (chipHolder.contains(currentChip-2) && rowCheck(currentChip-2,row))
-					&& (boundsCheck(currentChip-3) && rowCheck(stackedRow(currentChip-3),row) && ((JLabel) panel.getComponent(currentChip-3)).getIcon().equals(empty))
-					&& (rowCheck(currentChip-3,row)) ){
-						return currentChip-3;
-			}
-			if( (chipHolder.contains(currentChip-7)) // |
-					&& (chipHolder.contains(currentChip-14))
-					&& (boundsCheck(currentChip-21) && ((JLabel) panel.getComponent(currentChip-21)).getIcon().equals(empty)) ){
-						return currentChip-21;
-			}
-			if( (chipHolder.contains(currentChip-6) && rowCheck(currentChip-6,row-1)) // /
-					&& (chipHolder.contains(currentChip-12) && rowCheck(currentChip-12,row-2))
-					&& (boundsCheck(currentChip-18) 
-					&& rowCheck(stackedRow(currentChip-18),row-3) 
-					&& ((JLabel) panel.getComponent(currentChip-18)).getIcon().equals(empty)) ){
-						return currentChip-18;
-			}
-			if( (chipHolder.contains(currentChip-18) && rowCheck(currentChip-18,row-3)) // /
-					&& (chipHolder.contains(currentChip-12) && rowCheck(currentChip-12,row-2))
-					&& (boundsCheck(currentChip-6) 
-					&& rowCheck(stackedRow(currentChip-6),row-1) 
-					&& ((JLabel) panel.getComponent(currentChip-6)).getIcon().equals(empty)) ){
-						return currentChip-6;
-			}
-			if( (chipHolder.contains(currentChip-6) && rowCheck(currentChip-6,row-1)) // /
-					&& (chipHolder.contains(currentChip-18) && rowCheck(currentChip-18,row-3))
-					&& (boundsCheck(currentChip-12) 
-					&& rowCheck(stackedRow(currentChip-12),row-2) 
-					&& ((JLabel) panel.getComponent(currentChip-12)).getIcon().equals(empty)) ){
-						return currentChip-12;
-			}
-			if( (chipHolder.contains(currentChip-8) && rowCheck(currentChip-8,row-1))// \
-					&& (chipHolder.contains(currentChip-16) && rowCheck(currentChip-16,row-2))
-					&& (boundsCheck(currentChip-24) 
-					&& rowCheck(stackedRow(currentChip-24),row-3)
-					&& ((JLabel) panel.getComponent(currentChip-24)).getIcon().equals(empty)) ){
-						return currentChip-24;
-			}
-			if( (chipHolder.contains(currentChip-24) && rowCheck(currentChip-24,row-3))// \
-					&& (chipHolder.contains(currentChip-16) && rowCheck(currentChip-16,row-2))
-					&& (boundsCheck(currentChip-8) 
-					&& rowCheck(stackedRow(currentChip-8),row-1) 
-					&& ((JLabel) panel.getComponent(currentChip-8)).getIcon().equals(empty)) ){
-						return currentChip-8;
-			}
-			if( (chipHolder.contains(currentChip-8) && rowCheck(currentChip-8,row-1))// \
-					&& (chipHolder.contains(currentChip-24) && rowCheck(currentChip-24,row-3))
-					&& (boundsCheck(currentChip-16) 
-					&& rowCheck(stackedRow(currentChip-16),row-2) 
-					&& ((JLabel) panel.getComponent(currentChip-16)).getIcon().equals(empty)) ){
-						return currentChip-16;
+			for(int[] addArr : numChecks){
+				if ((chipHolder.contains(currentChip+addArr[0]) && rowCheck(currentChip+addArr[0],row+addArr[1]))
+						&& (chipHolder.contains(currentChip+addArr[2]) && rowCheck(currentChip+addArr[2],row+addArr[3]))
+						&& (boundsCheck(currentChip+addArr[4])
+						&& rowCheck(stackedRow(currentChip+addArr[4]),row+addArr[5])
+						&& ((JLabel) panel.getComponent(currentChip+addArr[4])).getIcon().equals(empty))) {
+					return currentChip+addArr[4];
+				}
 			}
 		}
 		return -1;
 	}
-	
+
+	private boolean winCondition(ArrayList<Integer> chip) {
+		int[][] numChecks = {
+				{1,0,2,0,3,0}, // -
+				{7,1,14,2,21,3}, // |
+				{8,1,16,2,24,3}, // \
+				{6,1,12,2,18,3} // /
+		};
+		for (int currentChip : chip) {
+			int row = (currentChip - currentChip % 7) / 7;
+			for(int[] a : numChecks) {
+				if ((chip.contains(currentChip + a[0]) && rowCheck(currentChip + a[0], row+a[1]))
+						&& (chip.contains(currentChip + a[2]) && rowCheck(currentChip + a[2], row+a[3]))
+						&& (chip.contains(currentChip + a[4]) && rowCheck(currentChip + a[4], row+a[5]))) { // -
+					return true;
+				}
+			}
+
+		}
+		return false;
+	}
+	private boolean rowCheck(int currentChip, int row) {
+		return (currentChip - currentChip % 7) / 7 == row;
+	}
+
+	private boolean boundsCheck(int currentChip) {
+		return currentChip > -1 && currentChip < 42;
+	}
+
+	private int stackedRow(int index) {
+		int rowInColumn = 35 + index%7;
+		if (index == -1) return -1;
+
+		while (!((JLabel) panel.getComponent(rowInColumn)).getIcon().equals(empty)) {
+			rowInColumn -= 7;
+			if (rowInColumn < 0) {
+				return -1;
+			}
+		}
+		return rowInColumn;
+	}
+
+	private void winMessage(String color) {
+		JOptionPane.showMessageDialog(frame, color + " has won the game", "Congrats!",
+				JOptionPane.PLAIN_MESSAGE);
+		GUI.playAgain(frame);
+	}
 }
